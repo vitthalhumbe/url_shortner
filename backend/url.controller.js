@@ -62,3 +62,26 @@ export const redirectToUrl = async (req, res) => {
         res.status(500).json({message: "Server error"});
     }
 };
+
+export const getUrlAnalytics = async (req, res) => {
+  try {
+    const { shortCode } = req.params;
+
+    const urlDoc = await Url.findOne({ shortCode });
+
+    if (!urlDoc) {
+      return res.status(404).json({ message: "Short URL not found" });
+    }
+
+    return res.status(200).json({
+      originalUrl: urlDoc.originalUrl,
+      shortCode: urlDoc.shortCode,
+      clickCount: urlDoc.clickCount,
+      createdAt: urlDoc.createdAt,
+      expiresAt: urlDoc.expiresAt,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
