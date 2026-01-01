@@ -9,9 +9,6 @@ export const createNewUrl = async (req, res) => {
     try {
 
 
-        console.log("HIT /api/shorten");
-    console.log("BODY:", req.body);
-
         const { originalUrl} = req.body;
         if (!originalUrl) {
             return res.status(400).json({message : "Original URL is not provided !"});
