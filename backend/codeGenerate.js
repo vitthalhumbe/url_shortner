@@ -1,6 +1,6 @@
 const BASE62 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-const generatedShortCode = (length= 6) => {
+const generateShortCode = (length= 6) => {
     let code = "";
 
     for (let i = 0; i < length; i++) {
@@ -12,4 +12,4 @@ const generatedShortCode = (length= 6) => {
     return code;
 };
 
-export default generatedShortCode;
+export default generateShortCode;
