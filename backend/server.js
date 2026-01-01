@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import app from "./app.js";
+import Url from "./url.model.js";
+import generatedShortCode from "./codeGenerate.js";
 
 
 dotenv.config();
@@ -15,3 +17,7 @@ mongoose.connect(process.env.MONGO_URI).then(()=> {
 }).catch((err) => {
     console.error("Mongo conneciton failed :", err);
 });
+
+
+console.log("URL model loaded : ", Url.modelName);
+console.log("Sample code :", generatedShortCode());
