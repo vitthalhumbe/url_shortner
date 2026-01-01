@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pocket URL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    .pixel {
+      font-family: "Press Start 2P", monospace;
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white min-h-screen flex items-center justify-center">
+
+  <div class="w-full max-w-2xl px-6 text-center">
+    <h1 class="pixel text-3xl md:text-4xl mb-6">Pocket URL</h1>
+
+    <p class="text-gray-400 mb-10">
+      simple URL shortner tool, try it !
+    </p>
+    <div class="flex items-center bg-[#1c1c1c] border border-gray-700 rounded-xl overflow-hidden mb-6">
+      <div class="px-4 text-gray-400">
+        <i data-lucide="link" class="w-5 h-5"></i>
+      </div>
+
+      <input
+        id="urlInput"
+        type="text"
+        placeholder="Enter your link here ..."
+        class="flex-1 bg-transparent outline-none py-4 text-gray-300 placeholder-gray-500"
+      />
+
+      <button
+        id="shortenBtn"
+        class="bg-indigo-500 hover:bg-indigo-600 transition px-5 py-4 mr-1 rounded-xl"
+      >
+        <i data-lucide="send" class="w-5 h-5 text-black"></i>
+      </button>
+    </div>
+    <div class="flex items-center gap-4">
+
+      <input
+        id="shortUrlOutput"
+        readonly
+        class="flex-1 bg-[#1c1c1c] border border-gray-700 rounded-xl px-4 py-4 text-gray-300 outline-none"
+        placeholder="short link will appear here"
+      />
+
+      <button
+        id="copyBtn"
+        class="flex items-center gap-2 bg-[#1c1c1c] border border-gray-700 rounded-xl px-5 py-4 hover:bg-[#262626] transition"
+      >
+        <i data-lucide="copy" class="w-4 h-4 text-gray-300"></i>
+        <span class="text-gray-300">copy link</span>
+      </button>
+
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const shortenBtn = document.getElementById("shortenBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const urlInput = document.getElementById("urlInput");
+    const shortUrlOutput = document.getElementById("shortUrlOutput");
+    shortenBtn.addEventListener("click", async () => {
+      const originalUrl = urlInput.value.trim();
+
+      if (!originalUrl) {
+        alert("Please enter a URL");
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/shorten", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ originalUrl }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.message || "Something went wrong");
+          return;
+        }
+
+        shortUrlOutput.value = data.shortUrl;
+      } catch (err) {
+        console.error(err);
+        alert("Server error");
+      }
+    });
+    copyBtn.addEventListener("click", () => {
+      if (!shortUrlOutput.value) {
+        alert("Nothing to copy");
+        return;
+      }
+
+      navigator.clipboard.writeText(shortUrlOutput.value);
+      alert("Copied to clipboard!");
+    });
+  </script>
+
+</body>
+</html>
