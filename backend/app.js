@@ -10,7 +10,7 @@ app.get("/:shortCode", redirectToUrl);
 
 app.use("/api", urlRoutes);
 app.get("/", (req, res)=> {
-    res.sendFile(path.resolve("../frontend/index.html"));
+    res.sendFile(path.resolve("./frontend/index.html"));
 });
 
 
