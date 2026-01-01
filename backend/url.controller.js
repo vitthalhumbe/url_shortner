@@ -38,3 +38,27 @@ export const createNewUrl = async (req, res) => {
     }
 };
 
+export const redirectToUrl = async (req, res) => {
+    try {
+        const { shortCode} = req.params;
+
+        const urlDoc = await Url.findOne({shortCode});
+        if(!urlDoc) {
+            return res.status(400).json({message: "Short URL not found"});
+        }
+
+
+        if (urlDoc.expiresAt && urlDoc.expiresAt < new Date()) {
+            return res.status(410).json({message : " Short url Expired"});
+        }
+
+        urlDoc.clickCount += 1;
+        await urlDoc.save();
+
+        return res.redirect(urlDoc.originalUrl);
+    }
+    catch(error) {
+        console.error(error);
+        res.status(500).json({message: "Server error"});
+    }
+};
